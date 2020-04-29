@@ -18,9 +18,11 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "cms页面管理接口", description = "cms页面管理接口，增、删、改、查")
 public interface CmsPageControllerApi {
     /**
-     * cms分页查询的接口
+     * 在页面输入查询条件，查询符合条件的页面信息
      * @Description TODO
-     * @params
+     * @param queryPageRequest.pageAliase  页面别名，模糊匹配
+     * @param queryPageRequest.pageSiteId  所属站点id，精确匹配
+     * @param queryPageRequest.templateId  模板id，精确匹配
      * @Author 张鸿志
      * @Date 2020/4/27 18:58
      * @Return 

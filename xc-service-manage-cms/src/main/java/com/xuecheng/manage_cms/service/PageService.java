@@ -7,11 +7,11 @@ import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.manage_cms.dao.CmsPageRepository;
+import freemarker.template.utility.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 分页的业务层
@@ -35,18 +35,24 @@ public class PageService {
      * @Return 
      **/
     public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest){
-        if(queryPageRequest == null){
-            queryPageRequest = new QueryPageRequest();
+        //条件匹配器,设置某一个域的匹配方式
+        ExampleMatcher matching = ExampleMatcher.matching().withMatcher("pageAliase",ExampleMatcher.GenericPropertyMatchers.contains());
+        CmsPage cmsPage = new CmsPage();
+        //判断传入的参数对象不为null时创造封装条件
+        if(!StringUtils.isEmpty(queryPageRequest)){
+            cmsPage.setSiteId(queryPageRequest.getSiteId());
+            cmsPage.setTemplateId(queryPageRequest.getTemplateId());
+            cmsPage.setPageName(queryPageRequest.getPageName());
+            cmsPage.setPageAliase(queryPageRequest.getPageAliase());
+            cmsPage.setPageId(queryPageRequest.getPageId());
         }
-        if(page <= 0){
-            page = 1;
-        }
-        //mongoDB接口下标需要减1
-        page = page -1;
+        //创建条件实例
+        Example<CmsPage> of = Example.of(cmsPage, matching);
         //定义分页对象
-        Pageable pageable = new PageRequest(page,size);
+        Pageable pageable = new PageRequest(page-1,size);
         /** 查询出来的Page对象中包含了数据的长度，就不需要再查count了 */
-        Page<CmsPage> all = cmsPageRepository.findAll(pageable);
+        Page<CmsPage> all = cmsPageRepository.findAll(of,pageable);
+        //创建保存分页查询对象，最后该对象要存入返回对象中去
         QueryResult<CmsPage> queryResult = new QueryResult<>();
         queryResult.setList(all.getContent());
         queryResult.setTotal(all.getTotalElements());

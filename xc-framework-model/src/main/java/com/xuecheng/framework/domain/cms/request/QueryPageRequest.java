@@ -17,18 +17,18 @@ import lombok.Data;
 @Data
 public class QueryPageRequest extends RequestData {
         /** 站点Id */
-        @ApiModelProperty(name = "站点Id")
+        @ApiModelProperty("站点Id")
         private String siteId;
         /** 页面id */
-        @ApiModelProperty(name = "页面Id")
+        @ApiModelProperty("页面Id")
         private String pageId;
         /** 页面名称 */
-        @ApiModelProperty(name = "页面名称")
+        @ApiModelProperty("页面名称")
         private String pageName;
         /** 页面别名 */
-        @ApiModelProperty(name = "页面别名")
+        @ApiModelProperty("页面别名")
         private String pageAliase;
         /** 模板Id */
-        @ApiModelProperty(name = "模板Id")
+        @ApiModelProperty("模板Id")
         private String templateId;
 }
